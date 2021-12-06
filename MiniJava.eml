@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component jdk="JavaSE-1.7" jdk_type="JavaSDK">
+	<exclude-output/>
+	<contentEntry url="file://$MODULE_DIR$"/>
+	<lib name="beaver-rt.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/tools/beaver-rt.jar!/"/>
+	</lib>
+	<lib name="beaver.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/tools/beaver.jar!/"/>
+	</lib>
+	<lib name="jastadd2.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/tools/jastadd2.jar!/"/>
+	</lib>
+	<lib name="JFlex.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/tools/JFlex.jar!/"/>
+	</lib>
+	<lib name="pgi.jar" scope="COMPILE">
+		<srcroot url="file://support/src/pgi-sources.jar"/>
+	</lib>
+	<lib name="kgi.jar" scope="COMPILE">
+		<srcroot url="file://support/src/kgi-sources.jar"/>
+	</lib>
+</component>

@@ -1,0 +1,5 @@
+Machine ::= States:State* Transitions:Transition*;
+
+State ::= <Name:String>;
+
+Transition ::= <Label:String> <S1:String> <S2:String>;

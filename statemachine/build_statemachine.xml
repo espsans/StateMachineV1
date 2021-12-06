@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="statemachine" default="compile" basedir="..">
+
+    <property name="src.dir" value="${basedir}/src" />
+    <property name="build.dir" value="${basedir}/bin" />
+    <property name="gen.dir" value="${basedir}/gen" />
+    <property name="tools.dir" value="${basedir}/tools" />
+    <property name="grammar.dir" value="${basedir}/statemachine" />
+
+    <property name="package" value="statemachine" />
+
+    <taskdef name="jflex" classname="JFlex.anttask.JFlexTask" classpath="${tools.dir}/JFlex.jar" />
+    <taskdef name="beaver" classname="beaver.comp.run.AntTask" classpath="${tools.dir}/beaver.jar" />
+    <taskdef name="jastadd" classname="org.jastadd.JastAddTask" classpath="${tools.dir}/jastadd2.jar" />
+    
+
+    <target name="compile" depends="generate, compile.gen, compile.src" />
+
+    <target name="generate" depends="clean, scanner, parser, jastadd" />
+
+    <target name="compile.gen">
+        <mkdir dir="${build.dir}" />
+        <javac srcdir="${gen.dir}" destdir="${build.dir}" includeantruntime="false" debug="true" debuglevel="lines,vars,source">
+            <include name="**/*.java" />
+            <classpath>
+                <pathelement location="${tools.dir}/beaver-rt.jar"/>
+            </classpath>
+        </javac>
+    </target>
+    
+    <target name="compile.src">
+        <mkdir dir="${build.dir}" />
+        <javac srcdir="${src.dir}" destdir="${build.dir}" includeantruntime="false" debug="true" debuglevel="lines,vars,source">
+            <include name="**/*.java" />
+            <classpath>
+                <pathelement path="${build.dir}"/>
+                <pathelement location="${tools.dir}/beaver-rt.jar"/>
+             </classpath>
+        </javac>
+    </target>
+    
+    <target name="scanner">
+        <mkdir dir="${gen.dir}/${package}" />
+        <jflex file="${grammar.dir}/SMScanner.flex" outdir="${gen.dir}/${package}" nobak="true" />
+    </target>
+
+    <target name="parser">
+        <mkdir dir="${gen.dir}/${package}" />
+        <beaver file="${grammar.dir}/SMParser.beaver" destdir="${gen.dir}/${package}" terminalNames="yes" compress="no" useSwitch="yes" reportActions="yes" />
+    </target>
+
+    <target name="jastadd">
+        <mkdir dir="${gen.dir}" />
+        <jastadd package="${package}" grammar="${grammar.dir}" outdir="${gen.dir}" beaver="true" debug="true">
+            <fileset dir="${grammar.dir}">
+                <include name="**/*.ast" />
+                <include name="**/*.jrag" />
+                <include name="**/*.jadd" />
+            </fileset>
+        </jastadd>
+    </target>
+
+    <target name="clean">
+        <delete dir="${gen.dir}/${package}"/>
+    </target>
+
+</project>

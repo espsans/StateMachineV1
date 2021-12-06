@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="StateMachineCompiler" default="typeCheck">
+
+    <property name="gen.dir" value="gen" />
+    <property name="build.dir" value="bin" />
+  
+
+    <target name="typeCheck" depends="clean" >
+        <ant antfile="statemachine/build_statemachine.xml" target="compile" />
+    </target>
+
+
+    <target name="clean">
+        <delete dir="${gen.dir}"/>
+        <delete dir="${build.dir}"/>
+    </target>
+
+</project>

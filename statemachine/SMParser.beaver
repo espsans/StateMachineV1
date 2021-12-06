@@ -1,0 +1,52 @@
+%header {:
+package statemachine;
+:};
+
+%terminals STATE, TRANSITION, ASSIGN, ARROW, ID, SEMI;
+
+%typeof Goal = "Machine";
+%typeof StateDecl = "State";
+%typeof StateDeclList = "List";
+%typeof TransitionDecl = "Transition";
+%typeof TransitionDeclList = "List";
+
+%typeof ID = "String";
+
+%goal Goal;
+
+Goal = StateDeclList.states TransitionDeclList.transitions
+    {: return new Machine(states, transitions); :}
+    ;
+
+StateDecl = STATE ID.name SEMI {: return new State(name); :}
+;
+
+StateDeclList = StateDecl.state
+                   {: List<State> list = new List<>();
+                      list.add(state);
+                      return new Symbol(list);
+                   :}
+                 | StateDeclList.list StateDecl.state
+                 {:
+                      list.add(state);
+                      return _symbol_list;
+                 :}
+;
+
+TransitionDecl = TRANSITION ID.label ASSIGN ID.s1 ARROW ID.s2 SEMI
+    {: return new Transition(label, s1, s2); :}
+;
+
+TransitionDeclList = TransitionDecl.t
+                   {: List<Transition> list = new List<>();
+                      list.add(t);
+                      return new Symbol(list);
+                   :}
+                 | TransitionDeclList.list TransitionDecl.t
+                 {:
+                      list.add(t);
+                      return _symbol_list;
+                 :}
+;
+
+

@@ -1,0 +1,71 @@
+aspect NameAnalysis{
+    syn boolean Machine.analysis(){
+        for (Transition t : getTransitionss()) {
+            if(t.check() == false) return false;
+        }
+        for (State s: getStatess()) {
+            int t_use = 0;
+            for (State s1: getStatess())
+                if(s.getName().equals(s1.getName()))
+                    t_use += 1;
+            if(t_use > 1) return false;
+            }
+
+        return true;
+    }
+
+    syn boolean Transition.check() {
+        Machine m = ((Machine)((List) getParent()).getParent());
+        boolean foundSource = false;
+        boolean foundTarget = false;
+        for (int i = 0 ; i < m.getNumStates(); i++ ) {
+            if(getS1().equals(m.getStates(i).getName()))
+                foundSource = true;
+            if(getS2().equals(m.getStates(i).getName()))
+                foundTarget = true;
+        }
+        return (foundSource && foundTarget );
+    }
+
+    syn boolean State.used() {
+        for (Transition t : ((Machine)((List) getParent()).getParent()).getTransitionss())
+         {
+            if(getName().equals(t.getS1()) || getName().equals(t.getS2())) return true;
+         }
+         return false;
+    }
+
+    public String Machine.stringAnalysis() {
+        StringBuilder sb = new StringBuilder();
+        boolean in = false;
+        if(!analysis()) {
+            for (Transition t : getTransitionss()) {
+                if(t.check() == false) {
+                    String s = "ERROR transition %s has undeclared state in it's definition!\n".formatted(t.getLabel());
+                    sb.append(s);
+                    in = true;
+                }
+            }
+        }
+        for (State s: getStatess()) if(s.used() == false){
+             String string = "WARNING state %s it's not used!\n".formatted(s.getName());
+             sb.append(string);
+             in = true;
+        }
+        for (State s: getStatess()) {
+                    int t_use = 0;
+                    for (State s1: getStatess())
+                        if(s.getName().equals(s1.getName())){
+                            t_use ++;
+                        }
+                    if(t_use > 1){
+                      String string = "ERROR state %s defined multiple times!\n".formatted(s.getName());
+                      sb.append(string);
+                      in = true;
+                    }
+                }
+
+        if(!in) sb.append("No error or warnings found");
+        return sb.toString();
+    }
+}
